@@ -85,4 +85,14 @@ async function updateUser(user) {
     return result;
 }
 
-export { massUploadUsers, getUsers, getUserbyEmail, addUser, updateUser };
+async function deleteUser(email) {
+    const client = await getConnection();
+
+    const result = client.db(DB)
+        .collection(COLLECTION_USERS)
+        .deleteOne({ email: email });
+
+    return result;
+}
+
+export { massUploadUsers, getUsers, getUserbyEmail, addUser, updateUser, deleteUser };
