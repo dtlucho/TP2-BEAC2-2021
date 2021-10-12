@@ -35,4 +35,13 @@ async function getUsers() {
     return users;
 }
 
-export { massUploadUsers, getUsers };
+async function getUserbyEmail(email) {
+    const client = await getConnection();
+    const user = client.db(DB)
+        .collection(COLLECTION_USERS)
+        .findOne({ email: email });
+
+    return user;
+}
+
+export { massUploadUsers, getUsers, getUserbyEmail };
