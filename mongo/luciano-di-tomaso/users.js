@@ -58,4 +58,31 @@ async function addUser(user) {
     return result;
 }
 
-export { massUploadUsers, getUsers, getUserbyEmail, addUser };
+async function updateUser(user) {
+    const client = await getConnection();
+    let db_user = await client.db(DB)
+        .collection(COLLECTION_USERS)
+        .findOne({ email: user.email });
+
+    if (!db_user) {
+        return 'Usuario incorrecto';
+    }
+
+    const match = await bcrypt.compare(user.password, db_user.password);
+    if (!match) {
+        return 'Contraseña incorrecta';
+    }
+
+    delete user.password;
+    const result = client.db(DB)
+        .collection(COLLECTION_USERS)
+        .updateOne({ email: user.email }, {
+            $set: {
+                name: user.name,
+            }
+        });
+    console.log('result');
+    return result;
+}
+
+export { massUploadUsers, getUsers, getUserbyEmail, addUser, updateUser };
