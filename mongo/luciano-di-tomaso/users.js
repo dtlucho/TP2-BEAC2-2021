@@ -25,4 +25,14 @@ async function massUploadUsers() {
     return result;
 }
 
-export { massUploadUsers };
+async function getUsers() {
+    const client = await getConnection();
+    const users = client.db(DB)
+        .collection(COLLECTION_USERS)
+        .find()
+        .toArray();
+
+    return users;
+}
+
+export { massUploadUsers, getUsers };
