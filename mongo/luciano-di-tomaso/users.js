@@ -44,4 +44,18 @@ async function getUserbyEmail(email) {
     return user;
 }
 
-export { massUploadUsers, getUsers, getUserbyEmail };
+async function addUser(user) {
+    let { password } = user;
+
+    let hash = await bcrypt.hash(password, saltRounds);
+
+    user.password = hash;
+    const client = await getConnection();
+    const result = client.db(DB)
+        .collection(COLLECTION_USERS)
+        .insertOne(user);
+
+    return result;
+}
+
+export { massUploadUsers, getUsers, getUserbyEmail, addUser };
